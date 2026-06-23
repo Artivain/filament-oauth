@@ -97,6 +97,13 @@ final class FilamentOAuthPlugin implements Plugin
         return $this;
     }
 
+    public function requireVerifiedEmail(): self
+    {
+        $this->configuration['security']['require_verified_email'] = true;
+
+        return $this;
+    }
+
     /**
      * @param  array<int, string>  $domains
      */
@@ -107,6 +114,13 @@ final class FilamentOAuthPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Configure Nextcloud as OIDC provider with sensible defaults.
+     *
+     * @param  string  $url The base URL of your Nextcloud instance (e.g., https://cloud.example.com)
+     * @param  string  $clientId OAuth client ID from Nextcloud admin panel
+     * @param  string  $clientSecret OAuth client secret from Nextcloud admin panel
+     */
     public function nextcloud(string $url, string $clientId, string $clientSecret): self
     {
         $this->configuration['providers']['nextcloud'] = [
