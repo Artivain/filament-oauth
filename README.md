@@ -1,38 +1,38 @@
 # Filament OAuth
 
-Filament OAuth est un futur plugin open source pour ajouter l'authentification OAuth2, OpenID Connect et SSO aux panels Filament 5.
+Filament OAuth is an open source plugin to add OAuth2, OpenID Connect and SSO authentication to Filament 5 panels.
 
-L'objectif du projet est de proposer une intégration simple pour les providers classiques comme Google ou GitHub, tout en supportant les environnements self-hosted et entreprise, notamment Nextcloud, avec un mode SSO seamless.
+The project goal is to provide a simple integration for common providers like Google or GitHub, while supporting self-hosted and enterprise environments, notably Nextcloud, Keycloak, Authentik or Zitadel.
 
-## Objectifs du projet
+## Project Objectives
 
-- Ajouter des connexions OAuth2 et OpenID Connect aux panels Filament 5.
-- Supporter plusieurs panels Filament dans une même application.
-- Configurer chaque panel directement dans son `PanelProvider`.
-- Fournir un preset Nextcloud utilisable comme provider OAuth/OIDC.
-- Permettre un mode SSO exclusif avec redirection automatique vers un fournisseur unique.
-- Garder une architecture extensible pour Socialite, OIDC et providers personnalisés.
-- Sécuriser la liaison des comptes via une table dédiée `oauth_accounts`.
+- Add OAuth2 and OpenID Connect connections to Filament 5 panels.
+- Support multiple Filament panels in the same application.
+- Configure each panel directly in its `PanelProvider`.
+- Provide a Nextcloud preset usable as OAuth/OIDC provider.
+- Allow exclusive SSO mode with automatic redirection to a single provider.
+- Keep an extensible architecture for Socialite, OIDC and custom providers.
+- Secure account linking via a dedicated `oauth_accounts` table.
 
-## Principes d'architecture
+## Architecture Principles
 
-### Configuration par `PanelProvider`
+### Configuration by `PanelProvider`
 
-Le projet privilégie une configuration locale à chaque panel Filament.
+The project prioritizes configuration local to each Filament panel.
 
-Chaque panel doit pouvoir définir indépendamment :
+Each panel should be able to independently define:
 
-- ses providers OAuth/OIDC ;
-- son mode d'authentification ;
-- son provider par défaut ;
-- son guard ;
-- ses règles de création utilisateur ;
-- ses règles de synchronisation utilisateur ;
-- ses règles de sécurité ;
-- son comportement SSO ;
-- son fallback vers la connexion locale.
+- its OAuth/OIDC providers;
+- its authentication mode;
+- its default provider;
+- its guard;
+- its user creation rules;
+- its user synchronization rules;
+- its security rules;
+- its SSO behavior;
+- its fallback to local login.
 
-Cette approche est préférée à une configuration globale unique, car elle respecte mieux le modèle multi-panel de Filament.
+This approach is preferred over a single global configuration, as it better respects Filament's multi-panel model.
 
 ```php
 use Vendor\FilamentOAuth\FilamentOAuthPlugin;
@@ -57,9 +57,9 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-### Configuration globale minimale
+### Minimal Global Configuration
 
-Le fichier `config/filament-oauth.php` servira surtout à définir les valeurs par défaut et les options partagées.
+The `config/filament-oauth.php` file will mainly define default values and shared options.
 
 ```php
 return [
@@ -79,18 +79,18 @@ return [
 ];
 ```
 
-Ordre de priorité prévu :
+Priority order:
 
-1. configuration explicite du plugin dans le `PanelProvider` ;
-2. configuration spécifique éventuelle dans le fichier de config ;
-3. valeurs par défaut globales ;
-4. valeurs internes du package.
+1. explicit configuration of the plugin in the `PanelProvider`;
+2. eventual specific configuration in the config file;
+3. global default values;
+4. internal package values.
 
-## Cas d'usage à supporter
+## Use Cases to Support
 
-### Login OAuth classique
+### Classic OAuth Login
 
-Un panel peut afficher plusieurs boutons de connexion.
+A panel can display multiple login buttons.
 
 ```php
 FilamentOAuthPlugin::make()
@@ -100,9 +100,9 @@ FilamentOAuthPlugin::make()
     ->createUsers(true);
 ```
 
-### Nextcloud comme provider
+### Nextcloud as Provider
 
-Le plugin doit proposer un preset Nextcloud au-dessus du driver OIDC.
+The plugin should offer a Nextcloud preset on top of the OIDC driver.
 
 ```php
 FilamentOAuthPlugin::make()
@@ -114,7 +114,7 @@ FilamentOAuthPlugin::make()
     ->buttons();
 ```
 
-Variables d'environnement prévues :
+Expected environment variables:
 
 ```env
 NEXTCLOUD_URL=https://cloud.example.com
@@ -122,9 +122,9 @@ NEXTCLOUD_CLIENT_ID=filament-admin
 NEXTCLOUD_CLIENT_SECRET=secret
 ```
 
-### Provider unique
+### Single Provider
 
-Un panel peut être limité à un seul fournisseur.
+A panel can be limited to a single provider.
 
 ```php
 FilamentOAuthPlugin::make()
@@ -137,9 +137,9 @@ FilamentOAuthPlugin::make()
     ->allowFallbackLogin();
 ```
 
-### SSO seamless
+### Seamless SSO
 
-Un panel peut rediriger automatiquement les utilisateurs non connectés vers le provider configuré.
+A panel can automatically redirect unauthenticated users to the configured provider.
 
 ```php
 FilamentOAuthPlugin::make()
@@ -152,11 +152,11 @@ FilamentOAuthPlugin::make()
     ->disableFallbackLogin();
 ```
 
-Ce mode est destiné aux intégrations intranet, entreprise ou self-hosted, par exemple un panel Filament intégré à un écosystème Nextcloud.
+This mode is intended for intranet, enterprise or self-hosted integrations, for example a Filament panel integrated into a Nextcloud ecosystem.
 
-### Multi-panels avec configurations différentes
+### Multi-panels with Different Configurations
 
-Exemple cible avec un panel `admin` en SSO Nextcloud strict et un panel `guest` avec login social classique.
+Example target with an `admin` panel in strict Nextcloud SSO and a `guest` panel with classic social login.
 
 ```php
 // AdminPanelProvider.php
@@ -202,39 +202,39 @@ public function panel(Panel $panel): Panel
 }
 ```
 
-## Drivers prévus
+## Planned Drivers
 
-### Driver Socialite
+### Socialite Driver
 
-Pour les providers OAuth courants :
+For common OAuth providers:
 
-- Google ;
-- GitHub ;
-- GitLab ;
-- Facebook ;
-- Microsoft ;
-- autres providers Socialite.
+- Google;
+- GitHub;
+- GitLab;
+- Facebook;
+- Microsoft;
+- other Socialite providers.
 
-### Driver OIDC
+### OIDC Driver
 
-Pour les providers OpenID Connect et environnements self-hosted :
+For OpenID Connect providers and self-hosted environments:
 
-- Nextcloud ;
-- Keycloak ;
-- Authentik ;
-- Authelia ;
-- Zitadel ;
-- Azure AD / Entra ID ;
-- Okta ;
+- Nextcloud;
+- Keycloak;
+- Authentik;
+- Authelia;
+- Zitadel;
+- Azure AD / Entra ID;
+- Okta;
 - Auth0.
 
-### Driver personnalisé
+### Custom Driver
 
-Le package devra permettre d'ajouter un provider custom sans modifier le coeur du plugin.
+The package should allow adding a custom provider without modifying the core plugin.
 
-## Routes prévues
+## Planned Routes
 
-Les routes doivent inclure l'identifiant du panel pour éviter les collisions multi-panels.
+Routes should include the panel identifier to avoid multi-panel collisions.
 
 ```text
 GET /filament-oauth/{panel}/redirect/{provider}
@@ -243,7 +243,7 @@ GET /filament-oauth/{panel}/error
 POST /filament-oauth/{panel}/logout
 ```
 
-Exemples :
+Examples:
 
 ```text
 GET /filament-oauth/admin/redirect/nextcloud
@@ -252,9 +252,9 @@ GET /filament-oauth/guest/redirect/github
 GET /filament-oauth/guest/callback/github
 ```
 
-## Contexte panel
+## Panel Context
 
-Le coeur du package devra résoudre un contexte OAuth propre au panel courant.
+The core of the package should resolve an OAuth context specific to the current panel.
 
 ```php
 final class OAuthPanelContext
@@ -275,20 +275,20 @@ final class OAuthPanelContext
 }
 ```
 
-Ce contexte sera utilisé pour :
+This context will be used for:
 
-- résoudre la configuration effective ;
-- générer les redirect URIs ;
-- valider qu'un provider est autorisé sur un panel ;
-- connecter l'utilisateur avec le bon guard ;
-- gérer le fallback login ;
-- gérer les erreurs et redirections par panel.
+- resolving effective configuration;
+- generating redirect URIs;
+- validating that a provider is authorized on a panel;
+- logging in the user with the correct guard;
+- managing fallback login;
+- managing errors and redirections per panel.
 
-## Stockage des comptes OAuth
+## OAuth Account Storage
 
-Le projet utilisera une table dédiée `oauth_accounts`.
+The project will use a dedicated `oauth_accounts` table.
 
-Champs envisagés :
+Planned fields:
 
 ```text
 oauth_accounts
@@ -311,7 +311,7 @@ oauth_accounts
 - updated_at
 ```
 
-Par défaut, les comptes seront probablement scopés par panel.
+By default, accounts will likely be scoped by panel.
 
 ```php
 'accounts' => [
@@ -319,25 +319,25 @@ Par défaut, les comptes seront probablement scopés par panel.
 ],
 ```
 
-Cela permet d'éviter les collisions si deux panels utilisent le même provider avec des règles différentes.
+This avoids collisions if two panels use the same provider with different rules.
 
-## Résolution utilisateur
+## User Resolution
 
-Ordre de résolution recommandé :
+Recommended resolution order:
 
-1. résoudre le panel et le provider ;
-2. vérifier que le provider est autorisé pour ce panel ;
-3. récupérer le profil OAuth/OIDC ;
-4. chercher un compte OAuth existant via `panel_id`, `provider` et `provider_user_id` ou `sub` ;
-5. chercher par email si la liaison par email est autorisée ;
-6. créer l'utilisateur si la création automatique est autorisée ;
-7. synchroniser les attributs autorisés ;
-8. connecter l'utilisateur avec le guard du panel ;
-9. rediriger vers l'URL intended du panel.
+1. resolve the panel and provider;
+2. verify that the provider is authorized for this panel;
+3. fetch the OAuth/OIDC profile;
+4. search for an existing OAuth account via `panel_id`, `provider` and `provider_user_id` or `sub`;
+5. search by email if email linking is authorized;
+6. create the user if automatic creation is authorized;
+7. synchronize authorized attributes;
+8. log in the user with the panel guard;
+9. redirect to the intended URL of the panel.
 
-## Sécurité
+## Security
 
-Options prévues :
+Planned options:
 
 ```php
 FilamentOAuthPlugin::make()
@@ -347,148 +347,148 @@ FilamentOAuthPlugin::make()
     ->createUsers(false);
 ```
 
-Le package devra gérer :
+The package should handle:
 
-- validation du state OAuth ;
-- nonce OIDC ;
-- protection contre les boucles en mode SSO ;
-- providers non autorisés par panel ;
-- email manquant ;
-- email non vérifié ;
-- domaines email autorisés ;
-- liaison de compte contrôlée ;
-- erreurs de callback ;
-- redirections sûres après login.
+- OAuth state validation;
+- OIDC nonce;
+- protection against loops in SSO mode;
+- unauthorized providers per panel;
+- missing email;
+- unverified email;
+- authorized email domains;
+- controlled account linking;
+- callback errors;
+- safe redirects after login.
 
 ## Logout
 
-Le logout devra être configurable par panel.
+Logout should be configurable per panel.
 
-Stratégies envisagées :
+Planned strategies:
 
-- logout local uniquement ;
-- logout local avec page intermédiaire ;
-- logout fédéré OIDC si le provider le supporte.
+- local logout only;
+- local logout with intermediate page;
+- federated OIDC logout if the provider supports it.
 
-Le logout local uniquement peut être problématique en mode SSO seamless, car l'utilisateur peut être immédiatement reconnecté par le provider. Le projet devra donc prévoir une stratégie dédiée pour éviter les boucles de reconnexion.
+Local logout only can be problematic in seamless SSO mode, as the user can be immediately reconnected by the provider. The project should therefore provide a strategy for this case.
 
 ## Roadmap
 
-### Phase 1 — Fondation package
+### Phase 1 — Package Foundation
 
-- Initialiser le package Laravel.
-- Créer le service provider.
-- Créer le plugin Filament 5.
-- Publier la configuration.
-- Ajouter Laravel Pint, Pest/PHPUnit et analyse statique.
-- Mettre en place GitHub Actions.
+- Initialize the Laravel package.
+- Create the service provider.
+- Create the Filament 5 plugin.
+- Publish the configuration.
+- Add Laravel Pint, Pest/PHPUnit and static analysis.
+- Set up GitHub Actions.
 
-### Phase 2 — Architecture panel-aware
+### Phase 2 — Panel-aware Architecture
 
-- Créer `OAuthPanelContext`.
-- Créer une registry des panels OAuth.
-- Résoudre la configuration effective par panel.
-- Résoudre le guard depuis le panel Filament.
-- Définir l'ordre de priorité des configurations.
+- Create `OAuthPanelContext`.
+- Create an OAuth panels registry.
+- Resolve effective configuration per panel.
+- Resolve guard from Filament panel.
+- Define configuration priority order.
 
-### Phase 3 — Routes multi-panels
+### Phase 3 — Multi-panel Routes
 
-- Ajouter les routes avec `{panel}` et `{provider}`.
-- Générer les redirect URIs par panel.
-- Stocker le panel et le provider dans le state OAuth.
-- Valider les callbacks par panel.
-- Prévoir les routes d'erreur et de logout par panel.
+- Add routes with `{panel}` and `{provider}`.
+- Generate redirect URIs per panel.
+- Store panel and provider in OAuth state.
+- Validate callbacks per panel.
+- Plan error routes and logout routes per panel.
 
-### Phase 4 — Stockage et résolution utilisateur
+### Phase 4 — Storage and User Resolution
 
-- Ajouter la migration `oauth_accounts`.
-- Ajouter l'option `scope_by_panel`.
-- Implémenter la résolution par provider user id ou subject OIDC.
-- Implémenter la liaison par email contrôlée.
-- Implémenter la création utilisateur optionnelle.
-- Implémenter la synchronisation utilisateur optionnelle.
+- Add `oauth_accounts` migration.
+- Add `scope_by_panel` option.
+- Implement resolution by provider user id or OIDC subject.
+- Implement controlled email linking.
+- Implement optional user creation.
+- Implement optional user synchronization.
 
-### Phase 5 — Driver Socialite
+### Phase 5 — Socialite Driver
 
-- Ajouter le driver Socialite.
-- Supporter Google et GitHub en premier.
-- Afficher les boutons OAuth sur la page login Filament.
-- Tester les callbacks et erreurs OAuth.
+- Add Socialite driver.
+- Support Google and GitHub first.
+- Display OAuth buttons on Filament login page.
+- Test OAuth callbacks and errors.
 
-### Phase 6 — Driver OIDC
+### Phase 6 — OIDC Driver
 
-- Ajouter un driver OpenID Connect générique.
-- Supporter la discovery `.well-known/openid-configuration`.
-- Gérer authorization endpoint, token endpoint et userinfo endpoint.
-- Mapper les claims OIDC vers le modèle utilisateur.
-- Gérer `sub`, `email`, `email_verified`, `name` et `picture`.
+- Add generic OpenID Connect driver.
+- Support discovery `.well-known/openid-configuration`.
+- Handle authorization endpoint, token endpoint and userinfo endpoint.
+- Map OIDC claims to user model.
+- Handle `sub`, `email`, `email_verified`, `name` and `picture`.
 
-### Phase 7 — Preset Nextcloud
+### Phase 7 — Nextcloud Preset
 
-- Ajouter un helper `nextcloud()`.
-- Documenter la création d'un client OAuth/OIDC dans Nextcloud.
-- Gérer les redirect URIs par panel.
-- Tester Nextcloud avec endpoints mockés.
-- Fournir un exemple de configuration admin/guest.
+- Add `nextcloud()` helper.
+- Document creation of OAuth/OIDC client in Nextcloud.
+- Handle redirect URIs per panel.
+- Test Nextcloud with mocked endpoints.
+- Provide admin/guest configuration example.
 
-### Phase 8 — Modes login, provider unique et SSO
+### Phase 8 — Login Modes, Single Provider and SSO
 
-- Implémenter le mode `buttons`.
-- Implémenter le mode `single_provider`.
-- Implémenter le mode `sso` avec auto-redirection.
-- Ajouter le fallback login configurable.
-- Ajouter la protection anti-boucles.
-- Gérer les erreurs par panel.
+- Implement `buttons` mode.
+- Implement `single_provider` mode.
+- Implement `sso` mode with auto-redirection.
+- Add configurable fallback login.
+- Add anti-loop protection.
+- Handle errors per panel.
 
-### Phase 9 — Sécurité avancée
+### Phase 9 — Advanced Security
 
-- Ajouter l'allowlist de domaines email.
-- Ajouter les règles email vérifié.
-- Ajouter les règles de liaison par email.
-- Ajouter des callbacks personnalisables.
-- Ajouter les events d'authentification.
+- Add email domain allowlist.
+- Add verified email rules.
+- Add email linking rules.
+- Add customizable callbacks.
+- Add authentication events.
 
-### Phase 10 — Documentation et release
+### Phase 10 — Documentation and Release
 
-- Rédiger l'installation complète.
-- Documenter la configuration par `PanelProvider`.
-- Documenter Nextcloud.
-- Documenter le mode SSO seamless.
-- Documenter les environnements multi-panels.
-- Ajouter `CHANGELOG.md`.
-- Ajouter `CONTRIBUTING.md`.
-- Publier une première version beta.
+- Write complete installation documentation.
+- Document configuration by `PanelProvider`.
+- Document Nextcloud.
+- Document seamless SSO mode.
+- Document multi-panel environments.
+- Add `CHANGELOG.md`.
+- Add `CONTRIBUTING.md`.
+- Publish a first beta version.
 
-## MVP recommandé
+## Recommended MVP
 
-La première version utile devrait inclure :
+The first usable version should include:
 
-1. plugin Filament 5 ;
-2. configuration par `PanelProvider` ;
-3. routes multi-panels ;
-4. table `oauth_accounts` ;
-5. driver Socialite avec Google et GitHub ;
-6. driver OIDC minimal ;
-7. preset Nextcloud ;
-8. mode login avec boutons ;
-9. mode provider unique ;
-10. mode SSO seamless ;
-11. fallback login configurable ;
-12. tests multi-panels de base.
+1. Filament 5 plugin;
+2. configuration by `PanelProvider`;
+3. multi-panel routes;
+4. `oauth_accounts` table;
+5. Socialite driver with Google and GitHub;
+6. minimal OIDC driver;
+7. Nextcloud preset;
+8. login mode with buttons;
+9. single provider mode;
+10. seamless SSO mode;
+11. configurable fallback login;
+12. basic multi-panel tests.
 
-## Tests à prévoir
+## Tests to Plan
 
-- Panel `admin` en SSO Nextcloud strict.
-- Panel `guest` avec Google/GitHub et fallback login.
-- Provider autorisé sur un panel mais refusé sur un autre.
-- Guards différents par panel.
-- Redirect URI différente par panel.
-- Callback vers mauvais panel refusé.
-- Utilisateur créé sur `guest` mais refusé sur `admin`.
-- Liaison par email autorisée ou refusée selon panel.
-- Protection contre les boucles SSO.
-- Gestion d'un email OIDC non vérifié.
+- `admin` panel in strict Nextcloud SSO.
+- `guest` panel with Google/GitHub and fallback login.
+- Provider authorized on one panel but denied on another.
+- Different guards per panel.
+- Different redirect URI per panel.
+- Callback to wrong panel rejected.
+- User created on `guest` but denied on `admin`.
+- Email linking authorized or denied per panel.
+- Protection against SSO loops.
+- Handling of unverified OIDC email.
 
-## Licence
+## License
 
-Le projet est prévu comme package open source. La licence cible est GNU AGPL.
+The project is planned as an open source package. The target license is GNU AGPL.
