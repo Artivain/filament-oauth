@@ -1,0 +1,65 @@
+{
+    "name": "filament-oauth/filament-oauth",
+    "description": "OAuth2, OpenID Connect and SSO authentication for Filament panels.",
+    "type": "library",
+    "license": "AGPL-3.0-or-later",
+    "keywords": [
+        "filament",
+        "laravel",
+        "oauth",
+        "openid-connect",
+        "oidc",
+        "sso",
+        "nextcloud"
+    ],
+    "homepage": "https://github.com/filament-oauth/filament-oauth",
+    "support": {
+        "issues": "https://github.com/filament-oauth/filament-oauth/issues",
+        "source": "https://github.com/filament-oauth/filament-oauth"
+    },
+    "require": {
+        "filament/filament": "^5.0",
+        "illuminate/contracts": "^11.0|^12.0",
+        "illuminate/support": "^11.0|^12.0",
+        "laravel/socialite": "^5.21",
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.22",
+        "orchestra/testbench": "^9.0|^10.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "FilamentOAuth\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FilamentOAuth\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "FilamentOAuth\\FilamentOAuthServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --memory-limit=512M",
+        "format": "pint",
+        "test": "pest",
+        "test:ci": "pest --no-coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
