@@ -13,7 +13,7 @@ final class OIDCConfigurator
     public function redirect(OAuthPanelContext $context): mixed
     {
         $client = $this->client($context);
-        
+
         return redirect($client->getAuthenticationUrl());
     }
 
@@ -52,7 +52,7 @@ final class OIDCConfigurator
             'provider' => $context->provider(),
         ]);
 
-        if (! $baseUrl || ! $clientId || ! $clientSecret) {
+        if (!$baseUrl || !$clientId || !$clientSecret) {
             throw new OpenIDConnectClientException('Missing required OIDC configuration');
         }
 
